@@ -1,0 +1,18 @@
+networks:
+  default:
+    name: ${NETWORK_NAME}
+    external: true
+
+services:
+  socrates:
+    container_name: ${APP}
+    image: ${APP}:local
+    env_file: ${CONTAINER_ENV_FILE}
+    ports:
+      - 50505:50505
+    volumes:
+      - ${CONFIG_DIR}:/app/config
+    networks:
+      default:
+        aliases:
+          - ${APP}

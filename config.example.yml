@@ -1,0 +1,16 @@
+log:
+  development: true
+  console: true
+  disableCaller: false
+  disableStackTrace: false
+  level: debug
+  callerSkip: 1
+
+jaeger:
+  host: jaeger:14268
+  serviceName: socrates
+  logSpans: false
+
+server:
+  host: localhost
+  port: 50505
