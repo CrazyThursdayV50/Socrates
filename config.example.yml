@@ -11,6 +11,9 @@ jaeger:
   serviceName: socrates
   logSpans: false
 
+chatter:
+  systemFilePath: /app/config/src
+
 server:
   host: localhost
   port: 50505

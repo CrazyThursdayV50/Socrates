@@ -53,13 +53,6 @@ func (c *Client) SetModel(model string) {
 	c.Send(action)
 }
 
-func (c *Client) SetSystem(system string) {
-	c.system = system
-	action := chatws.ActionSetSystem(system)
-	action.ID = atomic.AddInt64(&c.id, 1)
-	c.Send(action)
-}
-
 func (c *Client) HandleAnswer(handler func(*chatws.Event[*chatws.AnswerData], error) (int, []byte)) {
 	h := createHandler(handler)
 	c.handlers[chatws.EVENET_ANSWER] = h
@@ -91,15 +84,22 @@ func New(logger log.Logger, cfg *Config) *Client {
 			return handler(b)
 		}),
 
+		client.WithPongHandler(time.Second*3, func(s string) error {
+			logger.Debugf("Recv PONG: %s", s)
+			return nil
+		}),
+
 		client.WithPingLoop(func(done <-chan struct{}, conn *websocket.Conn) {
+			ticker := time.NewTicker(time.Minute)
 			for {
 				select {
 				case <-done:
 					return
 
-				default:
+				case <-ticker.C:
+					logger.Debugf("Send PING")
 					now := fmt.Appendf(nil, "%d", time.Now().UnixMilli())
-					conn.WriteControl(client.PingMessage, now, time.Now().Add(time.Second*5))
+					conn.WriteControl(client.PingMessage, now, time.Now().Add(time.Second*3))
 				}
 			}
 		}),
@@ -108,7 +108,6 @@ func New(logger log.Logger, cfg *Config) *Client {
 	wsclient.UpdateOptions(client.WithOnConnect(func() (int, []byte) {
 		action := chatws.ActionSetToken(c.token)
 		action.Data.Model = &c.model
-		action.Data.System = &c.system
 		action.ID = atomic.AddInt64(&c.id, 1)
 		data, _ := action.MarshalBinary()
 		return client.BinaryMessage, data

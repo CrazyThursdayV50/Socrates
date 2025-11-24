@@ -20,9 +20,8 @@ func (a *Action[T]) MarshalBinary() ([]byte, error) {
 }
 
 type SetConfigData struct {
-	Token  *string `json:"token,omitempty"`
-	System *string `json:"system,omitempty"`
-	Model  *string `json:"model,omitempty"`
+	Token *string `json:"token,omitempty"`
+	Model *string `json:"model,omitempty"`
 }
 
 type QuestionData struct {
@@ -52,15 +51,6 @@ func ActionSetModel(model string) *Action[*SetConfigData] {
 		Name: ACTION_SET_CONFIG,
 		Data: &SetConfigData{
 			Model: &model,
-		},
-	}
-}
-
-func ActionSetSystem(system string) *Action[*SetConfigData] {
-	return &Action[*SetConfigData]{
-		Name: ACTION_SET_CONFIG,
-		Data: &SetConfigData{
-			System: &system,
 		},
 	}
 }

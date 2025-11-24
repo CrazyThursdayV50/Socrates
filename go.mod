@@ -3,7 +3,7 @@ module github.com/CrazyThursdayV50/Socrates
 go 1.24.3
 
 require (
-	github.com/CrazyThursdayV50/pkgo v0.2.4
+	github.com/CrazyThursdayV50/pkgo v0.2.5
 	github.com/gin-gonic/gin v1.11.0
 	github.com/tidwall/gjson v1.18.0
 	google.golang.org/genai v1.36.0

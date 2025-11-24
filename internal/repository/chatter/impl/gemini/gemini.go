@@ -1,32 +1,25 @@
 package gemini
 
 import (
-	"github.com/CrazyThursdayV50/Socrates/internal/services/wshandler"
+	"github.com/CrazyThursdayV50/Socrates/internal/repository/chatter"
 	"github.com/CrazyThursdayV50/pkgo/log"
-	"github.com/CrazyThursdayV50/pkgo/trace"
-	"github.com/CrazyThursdayV50/pkgo/websocket/server"
 	"google.golang.org/genai"
 )
 
 type Chatter struct {
+	cfg            *chatter.Config
 	logger         log.Logger
-	wsserver       *server.Server
-	ai             *genai.Client
-	system         string
-	model          string
 	thinkingConfig *genai.ThinkingConfig
+
+	ai     *genai.Client
+	system string
+	model  string
 }
 
-func New(logger log.Logger, tracer trace.Tracer) *Chatter {
+func New(cfg *chatter.Config, logger log.Logger) *Chatter {
 	var c Chatter
 	c.logger = logger
-	server := server.New(
-		server.WithLogger(logger),
-		server.WithTracer(tracer),
-		server.WithHandler(wshandler.NewChatterHandler(logger, &c)),
-	)
-
-	c.wsserver = server
+	c.cfg = cfg
 	c.thinkingConfig = &genai.ThinkingConfig{IncludeThoughts: false}
 	return &c
 }

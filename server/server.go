@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/CrazyThursdayV50/Socrates/internal/repository/chatter"
 	"github.com/CrazyThursdayV50/pkgo/goo"
 	"github.com/CrazyThursdayV50/pkgo/log"
 	"github.com/CrazyThursdayV50/pkgo/trace"
@@ -26,12 +27,11 @@ type Server struct {
 	services Services
 }
 
-func New(cfg *Config, logger log.Logger, traceCreator trace.TracerCreator) *Server {
-	return &Server{cfg: cfg, logger: logger, tracerCreator: traceCreator}
+func New(cfg *Config, logger log.Logger, traceCreator trace.TracerCreator, chatter chatter.Repository) *Server {
+	return &Server{cfg: cfg, logger: logger, tracerCreator: traceCreator, impls: Impls{geminiChatter: chatter}}
 }
 
 func (s *Server) Init() {
-	s.initImpls()
 	s.initRepos()
 	s.initServices()
 }
@@ -48,6 +48,9 @@ func (s *Server) Run(ctx context.Context, wg *sync.WaitGroup) {
 	var engine = gin.Default()
 	root := engine.Group("/")
 	root.GET("ws", s.services.chatService.Listen)
+
+	chatter := root.Group("chatter")
+	chatter.PUT("/system/reload", s.services.chatService.ReloadSystem)
 	srv := http.Server{Handler: engine}
 
 	wg.Add(2)

@@ -6,4 +6,5 @@ import (
 
 type Chat interface {
 	Listen(*gin.Context)
+	ReloadSystem(*gin.Context)
 }

@@ -20,6 +20,10 @@ github.com/CrazyThursdayV50/pkgo v0.2.4-0.20251124112056-7e4bda6a9f66 h1:yGx7cRs
 github.com/CrazyThursdayV50/pkgo v0.2.4-0.20251124112056-7e4bda6a9f66/go.mod h1:lJ71cVPynRNXGJnP8oY1dfgUF1wQZ2hoUX1tKQHgMyA=
 github.com/CrazyThursdayV50/pkgo v0.2.4 h1:SdoTX5I+2WYHnallU7AILag77Kp5NlFmNv05Ikx0y/M=
 github.com/CrazyThursdayV50/pkgo v0.2.4/go.mod h1:lJ71cVPynRNXGJnP8oY1dfgUF1wQZ2hoUX1tKQHgMyA=
+github.com/CrazyThursdayV50/pkgo v0.2.5-0.20251124130739-708aa184edf2 h1:fLTN8A+NpJ9q5ZRAj26zA0ppYo8fm/W/3Kkncy62k4s=
+github.com/CrazyThursdayV50/pkgo v0.2.5-0.20251124130739-708aa184edf2/go.mod h1:lJ71cVPynRNXGJnP8oY1dfgUF1wQZ2hoUX1tKQHgMyA=
+github.com/CrazyThursdayV50/pkgo v0.2.5 h1:JHwikdgkJgBQ+S7eAX87BhvpBAj+YgJQanJ/ajXDTQU=
+github.com/CrazyThursdayV50/pkgo v0.2.5/go.mod h1:lJ71cVPynRNXGJnP8oY1dfgUF1wQZ2hoUX1tKQHgMyA=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2 h1:5IcZpTvzydCQeHzK4Ef/D5rrSqwxob0t8PQPMybUNFM=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=
 github.com/bytedance/sonic v1.14.0 h1:/OfKt8HFw0kh2rj8N0F6C/qPGRESq0BbaNZgcNXXzQQ=

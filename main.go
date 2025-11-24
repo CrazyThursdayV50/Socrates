@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"sync"
 
+	"github.com/CrazyThursdayV50/Socrates/internal/repository/chatter/impl/gemini"
 	"github.com/CrazyThursdayV50/Socrates/server"
 	"github.com/CrazyThursdayV50/pkgo/config"
 	"github.com/CrazyThursdayV50/pkgo/goo"
@@ -51,7 +52,18 @@ func main() {
 		panic(err)
 	}
 
-	server := server.New(&cfg.Server, logger, tracer)
+	gemini := gemini.New(&cfg.Chatter, logger)
+	err = gemini.LoadSystem()
+	if err != nil {
+		panic(err)
+	}
+
+	server := server.New(
+		&cfg.Server,
+		logger,
+		tracer,
+		gemini,
+	)
 	server.Init()
 	server.Run(ctx, &wg)
 }

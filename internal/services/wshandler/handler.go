@@ -11,8 +11,15 @@ import (
 )
 
 func NewChatterHandler(logger log.Logger, chat chatter.Repository) func(ctx context.Context, messageType int, data []byte, err error) (int, []byte, error) {
-	return func(ctx context.Context, messageType int, data []byte, err error) (int, []byte, error) {
+	return func(ctx context.Context, messageType int, data []byte, err error) (frame int, bytes []byte, e error) {
+		frame = 2
+
 		logger.Infof("Recv: %s", data)
+		defer func() {
+			if bytes != nil {
+				logger.Debugf("Send: %s", bytes)
+			}
+		}()
 
 		id := chatws.GetID(data)
 		name := chatws.GetName(data)
@@ -23,26 +30,21 @@ func NewChatterHandler(logger log.Logger, chat chatter.Repository) func(ctx cont
 			answer, err := chat.Chat(ctx, user)
 
 			if err != nil {
-				data, _ = chatws.EventResultFail(id, chatws.EVENET_ANSWER, "chat failed", err.Error()).MarshalBinary()
+				bytes, _ = chatws.EventResultFail(id, chatws.EVENET_ANSWER, "chat failed", err.Error()).MarshalBinary()
 			} else {
-				data, _ = chatws.EventAnswer(id, answer).MarshalBinary()
+				bytes, _ = chatws.EventAnswer(id, answer).MarshalBinary()
 			}
 
-			return 2, data, nil
+			return
 
 		case chatws.ACTION_SET_CONFIG:
 			result := gjson.GetBytes(data, "data.token")
 			if result.Exists() {
 				err := chat.SetToken(ctx, result.String())
 				if err != nil {
-					data, _ = chatws.EventResultFail(id, name, "set token failed", err.Error()).MarshalBinary()
-					return 2, data, nil
+					bytes, _ = chatws.EventResultFail(id, name, "set token failed", err.Error()).MarshalBinary()
+					return
 				}
-			}
-
-			result = gjson.GetBytes(data, "data.system")
-			if result.Exists() {
-				chat.SetSystem(result.String())
 			}
 
 			result = gjson.GetBytes(data, "data.model")
@@ -50,13 +52,13 @@ func NewChatterHandler(logger log.Logger, chat chatter.Repository) func(ctx cont
 				chat.SetModel(result.String())
 			}
 
-			data, _ = json.JSON().Marshal(chatws.EventResultOK(id, name))
-			return 2, data, nil
+			bytes, _ = json.JSON().Marshal(chatws.EventResultOK(id, name))
+			return
 
 		default:
 			logger.Warnf("unexpected name: %v", name)
 		}
 
-		return 1, nil, nil
+		return
 	}
 }

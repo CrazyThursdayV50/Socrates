@@ -35,7 +35,6 @@ func TestClient(t *testing.T) {
 	}
 
 	client.SetModel("gemini-2.5-flash")
-	client.SetSystem("你是一名数学家")
 	client.SetToken(os.Getenv("GEMINI_API_KEY"))
 	client.Chat("我是Alex，你是谁啊？")
 	time.Sleep(time.Hour)
