@@ -53,3 +53,5 @@ func (c *Chatter) LoadSystem() error {
 	c.system = system
 	return nil
 }
+
+func (c *Chatter) GetSystem() string { return c.system }

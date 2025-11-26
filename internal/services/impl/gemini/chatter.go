@@ -49,6 +49,5 @@ func (c *Service) ReloadSystem(ctx *gin.Context) {
 		return
 	}
 
-	ctx.String(http.StatusOK, "")
-	return
+	ctx.String(http.StatusOK, c.chatter.GetSystem())
 }
