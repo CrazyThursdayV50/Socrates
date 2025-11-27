@@ -20,9 +20,8 @@ type Client struct {
 	wsclient *client.Client
 	handlers map[string]func([]byte) (int, []byte)
 
-	model  string
-	token  string
-	system string
+	model *string
+	token *string
 }
 
 func (c *Client) Send(action encoding.BinaryMarshaler) {
@@ -40,14 +39,14 @@ func createHandler[T any](handler func(T, error) (int, []byte)) func([]byte) (in
 }
 
 func (c *Client) SetToken(token string) {
-	c.token = token
+	c.token = &token
 	action := chatws.ActionSetToken(token)
 	action.ID = atomic.AddInt64(&c.id, 1)
 	c.Send(action)
 }
 
 func (c *Client) SetModel(model string) {
-	c.model = model
+	c.model = &model
 	action := chatws.ActionSetModel(model)
 	action.ID = atomic.AddInt64(&c.id, 1)
 	c.Send(action)
@@ -106,8 +105,12 @@ func New(logger log.Logger, cfg *Config) *Client {
 	)
 
 	wsclient.UpdateOptions(client.WithOnConnect(func() (int, []byte) {
-		action := chatws.ActionSetToken(c.token)
-		action.Data.Model = &c.model
+		if c.token == nil {
+			return client.BinaryMessage, nil
+		}
+
+		action := chatws.ActionSetToken(*c.token)
+		action.Data.Model = c.model
 		action.ID = atomic.AddInt64(&c.id, 1)
 		data, _ := action.MarshalBinary()
 		return client.BinaryMessage, data
